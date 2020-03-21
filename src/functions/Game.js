@@ -1,52 +1,61 @@
-import render from "./render"
-import update from './update'
-import loop from "./loop"
+import render from './render'
+import getNextGeneration from './getNextGeneration'
+import createGrid from './createGrid'
+import loop from './loop'
 
 
-export default function Game(canvas) {
-    const context = canvas.getContext("2d")
-    const { width, height } = canvas
+export default class Game {
+    constructor(
+        canvas,
+        {
+            rows = 50,
+            columns = 50,
+            fps = 30,
+            grid = true,
+        } = {},
+        playing = true
+    ) {
+        const context = canvas.getContext("2d")
+        const { width, height } = canvas
 
-    this.context = context
-    this.width = width
-    this.height = height
+        this.context = context
+        this.width = width
+        this.height = height
+        this.playing = playing
+        this.grid = grid
 
-    this.grid = [
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, ],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, true, false, true, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-        [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
-    ]
+        this.rows = rows
+        this.columns = columns
+        this.fps = fps
+        this.cells = createGrid(this.rows, this.columns)
+    }
 
-    return this
-}
-
-Game.prototype = {
-    start() {
+    start = () => {
         this.loop = loop(
-            update.bind(this),
-            render.bind(this),
-            10,
+            this.update,
+            this.render,
+            this.fps,
+            30
         )
-    },
-    cancel() {
+    }
+
+    update = () => {
+        this.cells = getNextGeneration(this.cells, this.rows)
+    }
+
+    render = () => {
+        render(
+            this.context,
+            this.cells,
+            this.height,
+            this.width,
+            this.rows,
+            this.columns,
+            this.grid
+        )
+    }
+
+    cancel = () => {
         this.loop()
     }
 }

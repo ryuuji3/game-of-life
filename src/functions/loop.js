@@ -7,10 +7,9 @@
  * @param {Function} render callback
  * @param {Number} fps
  */
-export default function loop(update, render, fps = 60) {
+export default function loop(update, render, playing = true, fps = 60) {
     let delta = 0
     let last = window.performance.now()
-    let stopped = false
     let animationId
 
     function animation() {
@@ -20,6 +19,7 @@ export default function loop(update, render, fps = 60) {
 
         while(delta > step) {
             delta -= step
+
             update()
         }
 
@@ -27,7 +27,7 @@ export default function loop(update, render, fps = 60) {
 
         last = now
 
-        if (!stopped) {
+        if (playing) {
             animationId = requestAnimationFrame(animation)
         }
     }
@@ -35,7 +35,7 @@ export default function loop(update, render, fps = 60) {
     animationId = requestAnimationFrame(animation)
 
     return () => {
-        stopped = true
+        playing = false
         cancelAnimationFrame(animationId)
     }
 }

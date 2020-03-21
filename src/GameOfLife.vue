@@ -18,11 +18,11 @@ export default {
     props: {
         width: {
             type: Number,
-            default: 1079,
+            default: 400,
         },
         height: {
             type: Number,
-            default: 1079,
+            default: 400,
         }
     },
     computed: {

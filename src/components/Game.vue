@@ -40,6 +40,9 @@ export default {
     mounted() {
         this.game = new Game(this.canvas)
         this.game.start()
+    },
+    beforeDestroy () {
+        this.game.cancel()
     }
 }
 </script>
