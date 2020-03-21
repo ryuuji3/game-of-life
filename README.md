@@ -1,24 +1,6 @@
 # game-of-life
+---
 
-## Project setup
-```
-yarn install
-```
+A game of life simulator wrapped into a vue component.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![Screenshot](img/game-of-life-screenshot.png)
